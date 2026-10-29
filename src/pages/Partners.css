@@ -1,0 +1,258 @@
+/* ══════════════════════════════════════
+   PARTNERS PAGE STYLES
+══════════════════════════════════════ */
+
+.partners-page {
+  width: 100%;
+}
+
+.partners-hero {
+  background: var(--off-white);
+  padding: 80px 0;
+}
+
+.partners-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.partners-hero-text h1 {
+  font-size: 46px;
+  font-weight: 800;
+  color: var(--teal-dark);
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.partners-hero-text p {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-bottom: 35px;
+  line-height: 1.6;
+}
+
+.partners-hero-image {
+  background-color: var(--teal-dark);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  min-height: 380px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.partners-hero-image::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 12px solid var(--green-light);
+  opacity: 0.8;
+}
+
+.partners-hero-image::before {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  left: -50px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: var(--green-light);
+  opacity: 0.1;
+}
+
+.partners-hero-img-circle {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--green);
+  outline: 4px solid #fff;
+  outline-offset: -8px; /* Creates the inner white ring effect */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 1;
+  filter: grayscale(100%);
+  position: relative;
+}
+
+.rounded-image {
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.partners-section {
+  padding: 100px 0;
+  background: #fff;
+}
+
+.partners-section.bg-light {
+  background: var(--off-white);
+}
+
+.partners-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.partners-content-grid.reverse .partners-image {
+  order: 1;
+}
+
+.partners-content-grid.reverse .partners-text {
+  order: 2;
+}
+
+.section-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--teal-dark);
+  margin-bottom: 24px;
+}
+
+.sub-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--teal-dark);
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.partners-text p {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  line-height: 1.7;
+}
+
+.partners-check-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 35px 0;
+}
+
+.partners-check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.partners-check-list i {
+  color: var(--green);
+  font-size: 20px;
+  margin-top: 3px;
+}
+
+.partners-check-list span {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.partners-cta-section {
+  position: relative;
+  background-color: var(--teal-dark);
+  background-image: url('/renewable_power_grid.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.partners-cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 46, 36, 0.85);
+  z-index: 1;
+}
+
+.partners-cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.partners-cta-content h2 {
+  font-size: 40px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 40px;
+  line-height: 1.3;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+  .partners-hero-grid,
+  .partners-content-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+  
+  .partners-check-list li {
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .partners-content-grid.reverse .partners-image {
+    order: 2;
+  }
+  .partners-content-grid.reverse .partners-text {
+    order: 1;
+  }
+  
+  .partners-hero-text h1 {
+    font-size: 36px;
+  }
+  
+  .section-title {
+    font-size: 32px;
+  }
+
+  .partners-cta-content h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .partners-hero-text h1 {
+    font-size: 30px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+
+  .partners-hero {
+    padding: 60px 0;
+  }
+
+  .partners-section {
+    padding: 60px 0;
+  }
+
+  .partners-cta-section {
+    padding: 60px 20px;
+  }
+
+  .partners-cta-content h2 {
+    font-size: 26px;
+  }
+}

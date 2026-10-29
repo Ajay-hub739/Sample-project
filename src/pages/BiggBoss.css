@@ -1,0 +1,224 @@
+/* Bigg Boss Premium UI */
+
+.bb-page-container {
+  background: #0a0a0a; /* Deep dark background */
+  color: #ffffff;
+  min-height: 100vh;
+  font-family: var(--font, 'Nunito Sans', sans-serif);
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.bb-hero-section {
+  position: relative;
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  background: radial-gradient(circle at top center, #231804, #0a0a0a 70%);
+}
+
+.bb-hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://upload.wikimedia.org/wikipedia/en/6/63/BIGG_BOSS_TELUGU.jpg') center/cover no-repeat;
+  opacity: 0.15;
+  z-index: 0;
+  filter: blur(4px);
+}
+
+.bb-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.bb-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.highlight-gold-text {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bb-subtitle {
+  font-size: 1.25rem;
+  color: #a0a0a0;
+  line-height: 1.6;
+}
+
+/* Seasons Grid */
+.bb-seasons-section {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+/* Glassmorphism Cards */
+.bb-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 30px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.bb-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+  transition: all 0.6s ease;
+}
+
+.bb-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.1);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.bb-card:hover::before {
+  left: 200%;
+}
+
+.bb-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 16px;
+}
+
+.bb-season-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.bb-badge {
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFD700;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.bb-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bb-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bb-label {
+  font-size: 0.85rem;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.bb-value {
+  font-size: 1.1rem;
+  color: #e0e0e0;
+}
+
+.bb-value.bold {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.highlight-gold .bb-value {
+  color: #FFD700;
+}
+
+.bb-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.bb-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.small-text {
+  font-size: 0.9rem;
+}
+
+/* Animations */
+.animate-fade-down {
+  animation: fadeDown 1s ease forwards;
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* Staggered animation for grid items */
+.bb-grid .animate-fade-up:nth-child(1) { animation-delay: 0.1s; }
+.bb-grid .animate-fade-up:nth-child(2) { animation-delay: 0.2s; }
+.bb-grid .animate-fade-up:nth-child(3) { animation-delay: 0.3s; }
+.bb-grid .animate-fade-up:nth-child(4) { animation-delay: 0.4s; }
+.bb-grid .animate-fade-up:nth-child(5) { animation-delay: 0.5s; }
+.bb-grid .animate-fade-up:nth-child(6) { animation-delay: 0.6s; }
+.bb-grid .animate-fade-up:nth-child(7) { animation-delay: 0.7s; }
+.bb-grid .animate-fade-up:nth-child(8) { animation-delay: 0.8s; }
+.bb-grid .animate-fade-up:nth-child(9) { animation-delay: 0.9s; }
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bb-title {
+    font-size: 3rem;
+  }
+  .bb-grid {
+    grid-template-columns: 1fr;
+  }
+}

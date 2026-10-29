@@ -1,0 +1,92 @@
+export const biggBossSeasons = [
+  {
+    season: 1,
+    host: "Jr. NTR",
+    winner: "Siva Balaji",
+    runnerUp: "Adarsh Balakrishna",
+    launchDate: "16 July 2017",
+    finaleDate: "24 September 2017",
+    days: 70,
+    housemates: 16
+  },
+  {
+    season: 2,
+    host: "Nani",
+    winner: "Kaushal Manda",
+    runnerUp: "Geetha Madhuri",
+    launchDate: "10 June 2018",
+    finaleDate: "30 September 2018",
+    days: 112,
+    housemates: 18
+  },
+  {
+    season: 3,
+    host: "Nagarjuna",
+    winner: "Rahul Sipligunj",
+    runnerUp: "Sreemukhi",
+    launchDate: "21 July 2019",
+    finaleDate: "3 November 2019",
+    days: 105,
+    housemates: 17
+  },
+  {
+    season: 4,
+    host: "Nagarjuna",
+    winner: "Abijeet Duddala",
+    runnerUp: "Akhil Sarthak",
+    launchDate: "6 September 2020",
+    finaleDate: "20 December 2020",
+    days: 105,
+    housemates: 19
+  },
+  {
+    season: 5,
+    host: "Nagarjuna",
+    winner: "VJ Sunny",
+    runnerUp: "Shanmukh Jaswanth",
+    launchDate: "5 September 2021",
+    finaleDate: "19 December 2021",
+    days: 105,
+    housemates: 19
+  },
+  {
+    season: 6,
+    host: "Nagarjuna",
+    winner: "L. V. Revanth",
+    runnerUp: "Shrihan",
+    launchDate: "4 September 2022",
+    finaleDate: "18 December 2022",
+    days: 105,
+    housemates: 21
+  },
+  {
+    season: 7,
+    host: "Nagarjuna",
+    winner: "Pallavi Prashanth",
+    runnerUp: "Amardeep Chowdary",
+    launchDate: "3 September 2023",
+    finaleDate: "17 December 2023",
+    days: 105,
+    housemates: 19
+  },
+  {
+    season: 8,
+    host: "Nagarjuna",
+    winner: "TBA",
+    runnerUp: "TBA",
+    launchDate: "1 September 2024",
+    finaleDate: "15 December 2024",
+    days: 105,
+    housemates: 22
+  },
+  {
+    season: 9,
+    host: "Nagarjuna",
+    winner: "TBA",
+    runnerUp: "TBA",
+    launchDate: "7 September 2025",
+    finaleDate: "21 December 2025",
+    days: 105,
+    housemates: "TBA"
+  }
+];
