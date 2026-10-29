@@ -1,34 +1,33 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Home, { Header, Footer } from './pages/Home';
-import BusinessEnergy from './pages/BusinessEnergy';
-import GreenEnergy from './pages/GreenEnergy';
-import BusinessElectricity from './pages/BusinessElectricity';
-import BusinessGas from './pages/BusinessGas';
-import NewConnectionsWater from './pages/NewConnectionsWater';
-import BroadbandServices from './pages/BroadbandServices';
-import MobileSolutions from './pages/MobileSolutions';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
-import Contact from './pages/Contact';
-import AboutUs from './pages/AboutUs';
-import Partners from './pages/Partners';
-import TermsAndConditions from './pages/TermsAndConditions';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import ComplaintsHandlingProcedure from './pages/ComplaintsHandlingProcedure';
-import CHP from './pages/CHP';
-import CommercialHeatPumps from './pages/CommercialHeatPumps';
-import CommercialSolarPanels from './pages/CommercialSolarPanels';
-import MicrogridSolutions from './pages/MicrogridSolutions';
-import NetZeroSolutions from './pages/NetZeroSolutions';
-import Telecoms from './pages/Telecoms';
-import BusinessBroadbandTelecoms from './pages/BusinessBroadbandTelecoms';
-import BusinessVOIPTelecoms from './pages/BusinessVOIPTelecoms';
-import LeasedLinesTelecoms from './pages/LeasedLinesTelecoms';
-import BusinessMobileTelecoms from './pages/BusinessMobileTelecoms';
-import BusinessPackagesTelecoms from './pages/BusinessPackagesTelecoms';
-
-import BiggBossHistory from './pages/BiggBossHistory';
+const BusinessEnergy = lazy(() => import('./pages/BusinessEnergy'));
+const GreenEnergy = lazy(() => import('./pages/GreenEnergy'));
+const BusinessElectricity = lazy(() => import('./pages/BusinessElectricity'));
+const BusinessGas = lazy(() => import('./pages/BusinessGas'));
+const NewConnectionsWater = lazy(() => import('./pages/NewConnectionsWater'));
+const BroadbandServices = lazy(() => import('./pages/BroadbandServices'));
+const MobileSolutions = lazy(() => import('./pages/MobileSolutions'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const Contact = lazy(() => import('./pages/Contact'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+const Partners = lazy(() => import('./pages/Partners'));
+const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const ComplaintsHandlingProcedure = lazy(() => import('./pages/ComplaintsHandlingProcedure'));
+const CHP = lazy(() => import('./pages/CHP'));
+const CommercialHeatPumps = lazy(() => import('./pages/CommercialHeatPumps'));
+const CommercialSolarPanels = lazy(() => import('./pages/CommercialSolarPanels'));
+const MicrogridSolutions = lazy(() => import('./pages/MicrogridSolutions'));
+const NetZeroSolutions = lazy(() => import('./pages/NetZeroSolutions'));
+const Telecoms = lazy(() => import('./pages/Telecoms'));
+const BusinessBroadbandTelecoms = lazy(() => import('./pages/BusinessBroadbandTelecoms'));
+const BusinessVOIPTelecoms = lazy(() => import('./pages/BusinessVOIPTelecoms'));
+const LeasedLinesTelecoms = lazy(() => import('./pages/LeasedLinesTelecoms'));
+const BusinessMobileTelecoms = lazy(() => import('./pages/BusinessMobileTelecoms'));
+const BusinessPackagesTelecoms = lazy(() => import('./pages/BusinessPackagesTelecoms'));
+const BiggBossHistory = lazy(() => import('./pages/BiggBossHistory'));
 import './index.css';
 
 /* ─── SCROLL ANIMATION HOOK ─── */
@@ -90,40 +89,42 @@ export default function App() {
 
       <Header />
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/business-energy" element={<BusinessEnergy />} />
-          <Route path="/green-energy-solutions" element={<GreenEnergy />} />
-          <Route path="/electricity-energy" element={<BusinessElectricity />} />
-          <Route path="/business-gas" element={<BusinessGas />} />
-          <Route path="/chp-solutions" element={<CHP />} />
-          <Route path="/commercial-heat-pumps" element={<CommercialHeatPumps />} />
-          <Route path="/commercial-solar-panels" element={<CommercialSolarPanels />} />
-          <Route path="/microgrid-solutions" element={<MicrogridSolutions />} />
-          <Route path="/net-zero-solutions" element={<NetZeroSolutions />} />
-          <Route path="/telecoms" element={<Telecoms />} />
-          <Route path="/telecommunications/business-broadband" element={<BusinessBroadbandTelecoms />} />
-          <Route path="/telecommunications/business-voip" element={<BusinessVOIPTelecoms />} />
-          <Route path="/telecommunications/leased-lines" element={<LeasedLinesTelecoms />} />
-          <Route path="/telecommunications/business-mobile" element={<BusinessMobileTelecoms />} />
-          <Route path="/telecommunications/business-packages" element={<BusinessPackagesTelecoms />} />
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/business-energy" element={<BusinessEnergy />} />
+            <Route path="/green-energy-solutions" element={<GreenEnergy />} />
+            <Route path="/electricity-energy" element={<BusinessElectricity />} />
+            <Route path="/business-gas" element={<BusinessGas />} />
+            <Route path="/chp-solutions" element={<CHP />} />
+            <Route path="/commercial-heat-pumps" element={<CommercialHeatPumps />} />
+            <Route path="/commercial-solar-panels" element={<CommercialSolarPanels />} />
+            <Route path="/microgrid-solutions" element={<MicrogridSolutions />} />
+            <Route path="/net-zero-solutions" element={<NetZeroSolutions />} />
+            <Route path="/telecoms" element={<Telecoms />} />
+            <Route path="/telecommunications/business-broadband" element={<BusinessBroadbandTelecoms />} />
+            <Route path="/telecommunications/business-voip" element={<BusinessVOIPTelecoms />} />
+            <Route path="/telecommunications/leased-lines" element={<LeasedLinesTelecoms />} />
+            <Route path="/telecommunications/business-mobile" element={<BusinessMobileTelecoms />} />
+            <Route path="/telecommunications/business-packages" element={<BusinessPackagesTelecoms />} />
 
-          <Route path="/new-connections-water" element={<NewConnectionsWater />} />
-          <Route path="/broadband-services" element={<BroadbandServices />} />
-          <Route path="/mobile-solutions" element={<MobileSolutions />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/contact-us" element={<Contact />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/partners" element={<Partners />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/complaints-handling-procedure" element={<ComplaintsHandlingProcedure />} />
+            <Route path="/new-connections-water" element={<NewConnectionsWater />} />
+            <Route path="/broadband-services" element={<BroadbandServices />} />
+            <Route path="/mobile-solutions" element={<MobileSolutions />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/contact-us" element={<Contact />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/partners" element={<Partners />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/complaints-handling-procedure" element={<ComplaintsHandlingProcedure />} />
 
-          <Route path="/bigg-boss" element={<BiggBossHistory />} />
-          {/* Catch-all for sub-pages pointing to the placeholder for now */}
-          <Route path="*" element={<Home />} />
-        </Routes>
+            <Route path="/bigg-boss" element={<BiggBossHistory />} />
+            {/* Catch-all for sub-pages pointing to the placeholder for now */}
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
     </div>
