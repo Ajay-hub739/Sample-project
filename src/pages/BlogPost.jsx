@@ -1,18 +1,47 @@
 import useSEO from '../hooks/useSEO';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PageBanner from '../components/PageBanner';
-import { blogPosts } from '../data/blogData';
+import { fetchBlogPosts } from '../data/blogApi';
 
 export default function BlogPost() {
   useSEO("Blog Article | GGS Utilities", "Read our latest insights and expert articles on business energy, water solutions, and utility management from GGS Utilities.");
   const { slug } = useParams();
-  const post = blogPosts.find(p => p.slug === slug);
+  const [result, setResult] = useState(null);
 
   // Trigger scroll to top on load
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetchBlogPosts({ slug, signal: controller.signal })
+      .then((posts) => {
+        setResult({ slug, post: posts[0] ?? null, error: false });
+      })
+      .catch((fetchError) => {
+        if (!controller.signal.aborted) {
+          console.error('Failed to load WordPress blog post:', fetchError);
+          setResult({ slug, post: null, error: true });
+        }
+      });
+
+    return () => controller.abort();
+  }, [slug]);
+
+  const loading = result?.slug !== slug;
+  const error = !loading && result.error;
+  const post = !loading && !error ? result.post : null;
+
+  if (loading) {
+    return <p role="status" style={{ padding: '150px 20px', textAlign: 'center' }}>Loading article...</p>;
+  }
+
+  if (error) {
+    return <p role="alert" style={{ padding: '150px 20px', textAlign: 'center' }}>Unable to load this article right now. Please try again later.</p>;
+  }
 
   if (!post) {
     return (

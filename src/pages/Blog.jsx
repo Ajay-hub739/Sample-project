@@ -1,13 +1,23 @@
 import useSEO from '../hooks/useSEO';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 import PageBanner from '../components/PageBanner';
-import { blogPosts } from '../data/blogData';
+import { fetchBlogPosts } from '../data/blogApi';
 
 /* 2. Blog Grid Section */
-function BlogGrid() {
-  const posts = blogPosts;
+function BlogGrid({ posts, loading, error }) {
+  if (loading || error || posts.length === 0) {
+    return (
+      <section className="be-services-section" style={{ backgroundColor: '#f9f9f9', padding: '80px 0' }}>
+        <div className="section-container" style={{ textAlign: 'center' }}>
+          {loading && <p role="status">Loading blog posts...</p>}
+          {error && <p role="alert">Unable to load blog posts right now. Please try again later.</p>}
+          {!loading && !error && <p>No blog posts are available yet.</p>}
+        </div>
+      </section>
+    );
+  }
 
   const featuredPost = posts[0];
   const regularPosts = posts.slice(1);
@@ -64,7 +74,7 @@ function BlogGrid() {
         <h2 className="be-services-title center animate-fade-up" style={{ marginBottom: '50px', color: '#0a2e24' }}>More News & Insights</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
           {regularPosts.map((post, i) => (
-            <div key={i} className="blog-card animate-fade-up" style={{ 
+            <div key={post.slug} className="blog-card animate-fade-up" style={{
               backgroundColor: '#fff', 
               borderRadius: '16px', 
               overflow: 'hidden', 
@@ -109,6 +119,30 @@ function BlogGrid() {
 
 export default function Blog() {
   useSEO("Energy & Utilities Blog | Insights & News | GGS Utilities", "Read the latest news, insights, and expert tips on business energy, sustainability, and utility management on the GGS Utilities blog.");
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetchBlogPosts({ signal: controller.signal })
+      .then(setPosts)
+      .catch((fetchError) => {
+        if (!controller.signal.aborted) {
+          console.error('Failed to load WordPress blog posts:', fetchError);
+          setError(true);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
+
   // Trigger scroll animations specifically on page load
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -125,7 +159,7 @@ export default function Blog() {
         description="Stay updated with the latest industry trends, sustainability news, and expert insights to help your business manage energy and telecom solutions effectively." 
         image="/blog_hero.png" 
       />
-      <BlogGrid />
+      <BlogGrid posts={posts} loading={loading} error={error} />
     </div>
   );
 }
