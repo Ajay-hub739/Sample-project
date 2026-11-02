@@ -31,6 +31,16 @@ export default function BlogPost() {
     return () => controller.abort();
   }, [slug]);
 
+  useEffect(() => {
+    if (!result?.post || result.slug !== slug) {
+      return;
+    }
+
+    document.querySelectorAll(
+      '.blog-post-page .animate-fade-up, .blog-post-page .animate-fade-down, .blog-post-page .animate-fade-left, .blog-post-page .animate-fade-right, .blog-post-page .animate-stagger'
+    ).forEach((element) => element.classList.add('in-view'));
+  }, [result, slug]);
+
   const loading = result?.slug !== slug;
   const error = !loading && result.error;
   const post = !loading && !error ? result.post : null;

@@ -143,6 +143,16 @@ export default function Blog() {
     return () => controller.abort();
   }, []);
 
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    document.querySelectorAll(
+      '.blog-page .animate-fade-up, .blog-page .animate-fade-down, .blog-page .animate-fade-left, .blog-page .animate-fade-right, .blog-page .animate-stagger'
+    ).forEach((element) => element.classList.add('in-view'));
+  }, [loading, posts]);
+
   // Trigger scroll animations specifically on page load
   useEffect(() => {
     window.scrollTo(0, 0);
