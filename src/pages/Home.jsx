@@ -109,7 +109,7 @@ export function Header() {
 
               </ul>
             </li>
-            <li><a href="https://ggsutilities.com/blogs/" onClick={() => setMenuOpen(false)}>Blog</a></li>
+            <li><Link to="/blog" onClick={() => setMenuOpen(false)}>Blog</Link></li>
             <li><Link to="/contact-us" onClick={() => setMenuOpen(false)}>Contact Us</Link></li>
           </ul>
         </nav>
