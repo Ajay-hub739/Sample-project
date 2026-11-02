@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # Let the WordPress installation handle the blog and its permalinks.
+  RewriteRule ^blogs(?:/.*)?$ - [L]
+
   # Serve existing files and directories directly (e.g. send_mail.php, images, JS, CSS)
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
