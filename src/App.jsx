@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home, { Header, Footer } from './pages/Home';
 const BusinessEnergy = lazy(() => import('./pages/BusinessEnergy'));
 const GreenEnergy = lazy(() => import('./pages/GreenEnergy'));
@@ -8,8 +8,6 @@ const BusinessGas = lazy(() => import('./pages/BusinessGas'));
 const NewConnectionsWater = lazy(() => import('./pages/NewConnectionsWater'));
 const BroadbandServices = lazy(() => import('./pages/BroadbandServices'));
 const MobileSolutions = lazy(() => import('./pages/MobileSolutions'));
-const Blog = lazy(() => import('./pages/Blog'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
 const Contact = lazy(() => import('./pages/Contact'));
 const AboutUs = lazy(() => import('./pages/AboutUs'));
 const Partners = lazy(() => import('./pages/Partners'));
@@ -79,11 +77,6 @@ function useScrollAnimation() {
   }, [pathname]);
 }
 
-function LegacyBlogPostRedirect() {
-  const { slug } = useParams();
-  return <Navigate to={`/blogs/${slug}`} replace />;
-}
-
 /* ══════════════════════════════════════
    ROOT APP
 ══════════════════════════════════════ */
@@ -116,10 +109,6 @@ export default function App() {
             <Route path="/new-connections-water" element={<NewConnectionsWater />} />
             <Route path="/broadband-services" element={<BroadbandServices />} />
             <Route path="/mobile-solutions" element={<MobileSolutions />} />
-            <Route path="/blogs/" element={<Blog />} />
-            <Route path="/blogs/:slug" element={<BlogPost />} />
-            <Route path="/blog" element={<Navigate to="/blogs/" replace />} />
-            <Route path="/blog/:slug" element={<LegacyBlogPostRedirect />} />
             <Route path="/contact-us" element={<Contact />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/partners" element={<Partners />} />

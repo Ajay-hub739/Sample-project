@@ -1,7 +1,6 @@
 import useSEO from '../hooks/useSEO';
 import React, { useEffect } from 'react';
 
-import { Link } from 'react-router-dom';
 import PageBanner from '../components/PageBanner';
 import { blogPosts } from '../data/blogData';
 
@@ -30,33 +29,33 @@ function BlogGrid() {
           border: '1px solid #eaeaea'
         }}>
           <div style={{ position: 'relative', overflow: 'hidden', minHeight: '350px' }}>
-            <Link to={`/blogs/${featuredPost.slug}`} style={{ display: 'block', height: '100%' }}>
+            <a href={`https://ggsutilities.com/blogs/${featuredPost.slug}`} style={{ display: 'block', height: '100%' }}>
               <img 
                 src={featuredPost.image} 
                 alt={featuredPost.title} 
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
               />
-            </Link>
+            </a>
           </div>
           <div style={{ padding: '60px 50px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <p style={{ color: '#019267', fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '15px' }}>
               {featuredPost.date}
             </p>
-            <Link to={`/blogs/${featuredPost.slug}`} style={{ textDecoration: 'none' }}>
+            <a href={`https://ggsutilities.com/blogs/${featuredPost.slug}`} style={{ textDecoration: 'none' }}>
               <h3 style={{ fontSize: '32px', color: '#111', marginBottom: '20px', lineHeight: '1.3', fontWeight: 'bold' }}>
                 {featuredPost.title}
               </h3>
-            </Link>
+            </a>
             <p style={{ color: '#444', fontSize: '16px', lineHeight: '1.7', marginBottom: '35px' }}>
               {featuredPost.excerpt}
             </p>
-            <Link 
-              to={`/blogs/${featuredPost.slug}`}
+            <a
+              href={`https://ggsutilities.com/blogs/${featuredPost.slug}`}
               className="ggs-btn" 
               style={{ alignSelf: 'flex-start', padding: '12px 30px', fontSize: '15px' }}
             >
               Read Article
-            </Link>
+            </a>
           </div>
         </div>
 
@@ -74,30 +73,30 @@ function BlogGrid() {
               flexDirection: 'column',
               animationDelay: `${(i + 1) * 100}ms`
             }}>
-              <Link to={`/blogs/${post.slug}`} style={{ display: 'block', overflow: 'hidden', height: '240px' }}>
+              <a href={`https://ggsutilities.com/blogs/${post.slug}`} style={{ display: 'block', overflow: 'hidden', height: '240px' }}>
                 <img 
                   src={post.image} 
                   alt={post.title} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
-              </Link>
+              </a>
               <div style={{ padding: '35px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <p style={{ color: '#019267', fontSize: '13px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '15px' }}>{post.date}</p>
-                <Link to={`/blogs/${post.slug}`} style={{ textDecoration: 'none' }}>
+                <a href={`https://ggsutilities.com/blogs/${post.slug}`} style={{ textDecoration: 'none' }}>
                   <h3 style={{ fontSize: '22px', color: '#111', marginBottom: '15px', lineHeight: '1.4', fontWeight: 'bold' }}>
                     {post.title}
                   </h3>
-                </Link>
+                </a>
                 <p style={{ color: '#555', fontSize: '15px', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
                   {post.excerpt}
                 </p>
-                <Link 
-                  to={`/blogs/${post.slug}`}
+                <a
+                  href={`https://ggsutilities.com/blogs/${post.slug}`}
                   className="ggs-btn" 
                   style={{ alignSelf: 'flex-start', padding: '10px 20px', fontSize: '14px' }}
                 >
                   Read More
-                </Link>
+                </a>
               </div>
             </div>
           ))}

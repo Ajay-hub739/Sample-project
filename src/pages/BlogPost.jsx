@@ -1,6 +1,6 @@
 import useSEO from '../hooks/useSEO';
 import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PageBanner from '../components/PageBanner';
 import { blogPosts } from '../data/blogData';
 
@@ -19,7 +19,7 @@ export default function BlogPost() {
       <div style={{ padding: '150px 20px', textAlign: 'center', minHeight: '60vh' }}>
         <h2 style={{ fontSize: '32px', color: '#0a2e24', marginBottom: '20px' }}>Article Not Found</h2>
         <p style={{ color: '#666', marginBottom: '30px' }}>The blog post you are looking for does not exist.</p>
-        <Link to="/blogs/" className="ggs-btn">Back to Blog</Link>
+        <a href="https://ggsutilities.com/blogs/" className="ggs-btn">Back to Blog</a>
       </div>
     );
   }
@@ -35,9 +35,9 @@ export default function BlogPost() {
       {/* Article Content */}
       <section style={{ padding: '80px 20px 100px' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <Link to="/blogs/" style={{ display: 'inline-block', marginBottom: '40px', color: '#019267', textDecoration: 'none', fontWeight: '600' }}>
+          <a href="https://ggsutilities.com/blogs/" style={{ display: 'inline-block', marginBottom: '40px', color: '#019267', textDecoration: 'none', fontWeight: '600' }}>
             <i className="fas fa-arrow-left" style={{ marginRight: '10px' }}></i> Back to All Articles
-          </Link>
+          </a>
           
           <div 
             className="blog-content" 
