@@ -30,7 +30,7 @@ function BlogGrid() {
           border: '1px solid #eaeaea'
         }}>
           <div style={{ position: 'relative', overflow: 'hidden', minHeight: '350px' }}>
-            <Link to={`/blog/${featuredPost.slug}`} style={{ display: 'block', height: '100%' }}>
+            <Link to={`/blogs/${featuredPost.slug}`} style={{ display: 'block', height: '100%' }}>
               <img 
                 src={featuredPost.image} 
                 alt={featuredPost.title} 
@@ -42,7 +42,7 @@ function BlogGrid() {
             <p style={{ color: '#019267', fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '15px' }}>
               {featuredPost.date}
             </p>
-            <Link to={`/blog/${featuredPost.slug}`} style={{ textDecoration: 'none' }}>
+            <Link to={`/blogs/${featuredPost.slug}`} style={{ textDecoration: 'none' }}>
               <h3 style={{ fontSize: '32px', color: '#111', marginBottom: '20px', lineHeight: '1.3', fontWeight: 'bold' }}>
                 {featuredPost.title}
               </h3>
@@ -51,7 +51,7 @@ function BlogGrid() {
               {featuredPost.excerpt}
             </p>
             <Link 
-              to={`/blog/${featuredPost.slug}`}
+              to={`/blogs/${featuredPost.slug}`}
               className="ggs-btn" 
               style={{ alignSelf: 'flex-start', padding: '12px 30px', fontSize: '15px' }}
             >
@@ -74,7 +74,7 @@ function BlogGrid() {
               flexDirection: 'column',
               animationDelay: `${(i + 1) * 100}ms`
             }}>
-              <Link to={`/blog/${post.slug}`} style={{ display: 'block', overflow: 'hidden', height: '240px' }}>
+              <Link to={`/blogs/${post.slug}`} style={{ display: 'block', overflow: 'hidden', height: '240px' }}>
                 <img 
                   src={post.image} 
                   alt={post.title} 
@@ -83,7 +83,7 @@ function BlogGrid() {
               </Link>
               <div style={{ padding: '35px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <p style={{ color: '#019267', fontSize: '13px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '15px' }}>{post.date}</p>
-                <Link to={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
+                <Link to={`/blogs/${post.slug}`} style={{ textDecoration: 'none' }}>
                   <h3 style={{ fontSize: '22px', color: '#111', marginBottom: '15px', lineHeight: '1.4', fontWeight: 'bold' }}>
                     {post.title}
                   </h3>
@@ -92,7 +92,7 @@ function BlogGrid() {
                   {post.excerpt}
                 </p>
                 <Link 
-                  to={`/blog/${post.slug}`}
+                  to={`/blogs/${post.slug}`}
                   className="ggs-btn" 
                   style={{ alignSelf: 'flex-start', padding: '10px 20px', fontSize: '14px' }}
                 >

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import Home, { Header, Footer } from './pages/Home';
 const BusinessEnergy = lazy(() => import('./pages/BusinessEnergy'));
 const GreenEnergy = lazy(() => import('./pages/GreenEnergy'));
@@ -79,6 +79,11 @@ function useScrollAnimation() {
   }, [pathname]);
 }
 
+function LegacyBlogPostRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={`/blogs/${slug}`} replace />;
+}
+
 /* ══════════════════════════════════════
    ROOT APP
 ══════════════════════════════════════ */
@@ -111,8 +116,10 @@ export default function App() {
             <Route path="/new-connections-water" element={<NewConnectionsWater />} />
             <Route path="/broadband-services" element={<BroadbandServices />} />
             <Route path="/mobile-solutions" element={<MobileSolutions />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/blogs/" element={<Blog />} />
+            <Route path="/blogs/:slug" element={<BlogPost />} />
+            <Route path="/blog" element={<Navigate to="/blogs/" replace />} />
+            <Route path="/blog/:slug" element={<LegacyBlogPostRedirect />} />
             <Route path="/contact-us" element={<Contact />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/partners" element={<Partners />} />
