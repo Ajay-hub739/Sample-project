@@ -8,6 +8,8 @@ const BusinessGas = lazy(() => import('./pages/BusinessGas'));
 const NewConnectionsWater = lazy(() => import('./pages/NewConnectionsWater'));
 const BroadbandServices = lazy(() => import('./pages/BroadbandServices'));
 const MobileSolutions = lazy(() => import('./pages/MobileSolutions'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 const Contact = lazy(() => import('./pages/Contact'));
 const AboutUs = lazy(() => import('./pages/AboutUs'));
 const Partners = lazy(() => import('./pages/Partners'));
@@ -109,6 +111,8 @@ export default function App() {
             <Route path="/new-connections-water" element={<NewConnectionsWater />} />
             <Route path="/broadband-services" element={<BroadbandServices />} />
             <Route path="/mobile-solutions" element={<MobileSolutions />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/contact-us" element={<Contact />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/partners" element={<Partners />} />
