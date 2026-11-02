@@ -1,4 +1,4 @@
-const BLOG_API_URL = 'https://ggsutilities.com/blogs/wp-json/wp/v2/posts';
+const BLOG_API_URL = 'https://blogs.ggsutilities.com/wp-json/wp/v2/posts';
 
 function getTextFromHtml(html = '') {
   const container = document.createElement('div');
