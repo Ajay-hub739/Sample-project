@@ -5,7 +5,11 @@ import '../index.css';
 import TelecomModal from '../components/TelecomModal';
 
 export default function BusinessMobileTelecoms() {
-  useSEO("Business Mobile | Telecommunications", "Better Business Mobile Connectivity");
+  useSEO(
+    "Business Mobile UK | Business SIM Plans | GGS Utilities",
+    "Business mobile solutions across the UK, including flexible business mobile plans and SIM options to keep your team connected wherever they work.",
+    "business mobile UK, business mobile, business mobile plans, business SIM, business SIM only, business mobile phone plans, UK business mobile, business mobile services, mobile solutions for business, business mobile connectivity."
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

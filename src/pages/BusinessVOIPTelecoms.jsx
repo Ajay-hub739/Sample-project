@@ -5,7 +5,11 @@ import '../index.css';
 import TelecomModal from '../components/TelecomModal';
 
 export default function BusinessVOIPTelecoms() {
-  useSEO("Business VOIP Services | Telecommunications", "Next-Generation Cloud Voice Solutions");
+  useSEO(
+    "Business VoIP Services | VoIP Phone Systems UK",
+    "Business VoIP Services for UK businesses with flexible VoIP phone systems designed to support reliable business communications and connectivity.",
+    "business VoIP UK, business VoIP, VoIP phone system, business phone system, VoIP services UK, business VoIP services, VoIP for business, business telephone systems, cloud phone system, business communications."
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

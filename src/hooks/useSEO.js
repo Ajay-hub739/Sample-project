@@ -35,7 +35,19 @@ function useSEO(title, description, keywords) {
 
   useEffect(() => {
     if (title) {
-      document.title = title;
+      const titleTags = document.head.querySelectorAll('title');
+      let titleTag = titleTags[0];
+
+      titleTags.forEach((tag, index) => {
+        if (index > 0) tag.remove();
+      });
+
+      if (!titleTag) {
+        titleTag = document.createElement('title');
+        document.head.appendChild(titleTag);
+      }
+
+      titleTag.textContent = title;
     }
 
     const updateMetaTag = (name, content) => {

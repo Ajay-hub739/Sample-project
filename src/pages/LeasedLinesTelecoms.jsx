@@ -5,7 +5,11 @@ import '../index.css';
 import TelecomModal from '../components/TelecomModal';
 
 export default function LeasedLinesTelecoms() {
-  useSEO("Leased Lines | Telecommunications", "Dedicated Connectivity for Businesses That Can’t Afford Downtime");
+  useSEO(
+    "Leased Lines UK | Business Leased Line | GGS Utilities",
+    "Get business leased lines and dedicated internet connectivity across the UK, with reliable, high-performance connections for businesses.",
+    "leased lines UK, business leased lines, leased line broadband, dedicated internet access, dedicated internet connection, business internet leased line, leased line services UK, dedicated business internet, high speed leased lines, business connectivity."
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

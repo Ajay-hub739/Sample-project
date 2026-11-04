@@ -9,7 +9,11 @@ import '../index.css';
 const PhoneInput = PhoneInputModule.default ? PhoneInputModule.default : PhoneInputModule;
 
 export default function Telecoms() {
-  useSEO("Telecommunications | GGS Utilities", "Transforming Businesses with Latest Technology Telecom Services");
+  useSEO(
+    "Business Telecom Services UK | Latest Technology Telecom Services",
+    "Business telecoms services across the UK, including broadband, VoIP, leased lines and business mobile services to keep your organisation connected.",
+    "business telecoms, business telecommunications, business connectivity, UK business telecoms, business communication services, business telecom services, telecom solutions for businesses, business communication solutions, UK telecommunications services."
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({

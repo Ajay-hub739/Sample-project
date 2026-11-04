@@ -5,7 +5,11 @@ import '../index.css';
 import TelecomModal from '../components/TelecomModal';
 
 export default function BusinessBroadbandTelecoms() {
-  useSEO("Business Broadband | Telecommunications", "Business Broadband That Keeps You Ahead");
+  useSEO(
+    "Business Broadband UK | Fibre & Internet | GGS",
+    "Get reliable business broadband, fibre broadband and business internet solutions across the UK. GGS Utilities helps keep your business connected.",
+    "business broadband UK, business broadband, business fibre broadband, business internet, UK business broadband, fibre broadband for business, business internet services, business broadband services, business connectivity, commercial broadband."
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
