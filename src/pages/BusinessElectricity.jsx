@@ -110,7 +110,11 @@ function BEProcess() {
 }
 
 export default function BusinessElectricity() {
-  useSEO("Business Electricity Connections | GGS Utilities", "Secure reliable business electricity with GGS Utilities. We offer tailored plans, fast installations, and competitive rates for all your power needs.");
+  useSEO(
+    "Business Electricity | Rates, Tariffs & Energy Services",
+    "Get competitive business electricity rates, tariffs and quotes with GGS Utilities. Our business electricity services and solutions help UK businesses manage energy costs.",
+    "business electricity, business electricity rates, business electricity prices, business electricity tariffs, business electricity suppliers, business electricity quotes, business electricity contracts, commercial electricity, commercial electricity rates, electricity supply for businesses, business energy services, business energy solutions, UK business electricity."
+  );
   // Trigger scroll animations specifically on page load
   useEffect(() => {
     window.scrollTo(0, 0);

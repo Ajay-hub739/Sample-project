@@ -224,7 +224,11 @@ function NCWFAQ() {
 }
 
 export default function NewConnectionsWater() {
-  useSEO("Commercial Water Services | GGS Utilities", "Establish reliable commercial water connections and switch water suppliers with GGS Utilities. We handle the process efficiently, ensuring uninterrupted water supply.");
+  useSEO(
+    "Commercial Water Services | Water Solutions for Businesses",
+    "GGS Utilities provides commercial water services and water solutions for UK businesses, including reliable water supply, connections and utility support.",
+    "commercial water services, commercial water solutions, commercial water supply, commercial water connections, business water services, business water solutions, business water supply, water services for businesses, commercial water suppliers, UK commercial water services."
+  );
   // Trigger scroll animations specifically on page load
   useEffect(() => {
     window.scrollTo(0, 0);

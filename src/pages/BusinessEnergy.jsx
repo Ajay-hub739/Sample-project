@@ -157,7 +157,11 @@ function ImplementationProcessSection() {
 
 
 export default function BusinessEnergy() {
-  useSEO("Business Energy Solutions | Electricity & Gas | GGS Utilities", "Explore comprehensive business energy solutions. GGS Utilities offers tailored electricity and gas plans to reduce costs and boost your efficiency.");
+  useSEO(
+    "Business Energy Services & Solutions | GGS Utilities",
+    "Explore business energy services and solutions for electricity and gas. GGS Utilities helps UK businesses manage energy costs with tailored support.",
+    "business energy, business energy rates, business energy prices, business energy tariffs, business energy suppliers, business energy quotes, business energy contracts, business energy comparison, commercial energy, commercial energy rates, business electricity, business gas, business electricity rates, business gas rates, business energy services, business energy solutions, UK business energy, energy solution for businesses."
+  );
   // Re-trigger scroll animations when route mounts
   useEffect(() => {
     window.scrollTo(0, 0);

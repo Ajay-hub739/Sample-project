@@ -30,28 +30,38 @@ const CANONICAL_URLS = {
   '/complaints-handling-procedure': 'https://ggsutilities.com/complaints-handling-procedure/',
 };
 
-function useSEO(title, description) {
+function useSEO(title, description, keywords) {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Update title
     if (title) {
       document.title = title;
     }
 
-    // Update meta description
-    if (description) {
-      let metaDescription = document.querySelector('meta[name="description"]');
-      
-      if (metaDescription) {
-        metaDescription.setAttribute('content', description);
-      } else {
-        metaDescription = document.createElement('meta');
-        metaDescription.name = 'description';
-        metaDescription.content = description;
-        document.head.appendChild(metaDescription);
+    const updateMetaTag = (name, content) => {
+      const metaTags = document.head.querySelectorAll(`meta[name="${name}"]`);
+      let metaTag = metaTags[0];
+
+      metaTags.forEach((tag, index) => {
+        if (index > 0) tag.remove();
+      });
+
+      if (!content) {
+        metaTag?.remove();
+        return;
       }
-    }
+
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.name = name;
+        document.head.appendChild(metaTag);
+      }
+
+      metaTag.content = content;
+    };
+
+    updateMetaTag('description', description);
+    updateMetaTag('keywords', keywords);
 
     const normalizedPath = pathname === '/' ? '/' : `/${pathname.replace(/^\/+|\/+$/g, '')}`;
     const canonicalUrl = CANONICAL_URLS[normalizedPath]
@@ -70,7 +80,7 @@ function useSEO(title, description) {
     }
 
     canonicalLink.href = canonicalUrl;
-  }, [title, description, pathname]);
+  }, [title, description, keywords, pathname]);
 }
 
 export default useSEO;

@@ -112,7 +112,11 @@ function BEProcess() {
 
 
 export default function BusinessGas() {
-  useSEO("Business Gas Solutions | Reliable Supply | GGS Utilities", "Discover cost-effective business gas solutions. We provide seamless installations, expert guidance, and scalable plans for your commercial needs.");
+  useSEO(
+    "Business Gas Rates & Prices | Gas Services for Businesses",
+    "Get competitive business gas rates and prices with GGS Utilities. Our tailored gas solutions and services help UK businesses manage energy costs.",
+    "business gas, business gas rates, business gas prices, business gas quotes, business gas suppliers, business gas costs, commercial gas, commercial gas rates, commercial gas prices, business gas services, business gas solutions, UK business gas, gas services for businesses, gas supply for businesses."
+  );
   // Trigger scroll animations specifically on page load
   useEffect(() => {
     window.scrollTo(0, 0);
