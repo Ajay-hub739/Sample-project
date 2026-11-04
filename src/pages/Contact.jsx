@@ -1,11 +1,11 @@
 import useSEO from '../hooks/useSEO';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PhoneInputModule from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import PageBanner from '../components/PageBanner';
 
 const PhoneInput = PhoneInputModule.default ? PhoneInputModule.default : PhoneInputModule; 
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx6SCtjWfBCOCiMC39qXnMQDvmCdSw4YiHC6WIbGQ3Us1yqyUoIw_WUGQQlGXjdmLig6w/exec';
+const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 // ContactBoxes removed as it's now integrated into ContactForm
 
 function ContactForm() {
@@ -20,6 +20,8 @@ function ContactForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const submissionInProgress = useRef(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,35 +29,86 @@ function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('/send_mail.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+    if (submissionInProgress.current) return;
 
-      const result = await response.json();
-      if (result.status === 'success') {
+    submissionInProgress.current = true;
+    setIsSubmitting(true);
+
+    const submissionData = { ...formData };
+
+    try {
+      const emailSubmission = (async () => {
         try {
-          if (!GOOGLE_SHEETS_URL) {
-            throw new Error('Google Sheets URL is not configured');
+          const response = await fetch('/send_mail.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData),
+          });
+          const result = await response.json();
+
+          if (!response.ok || result.status !== 'success') {
+            return {
+              status: 'failed',
+              message: result.message || 'Email delivery failed.',
+            };
           }
 
+          return { status: 'sent' };
+        } catch (error) {
+          console.error('Error sending contact email:', error);
+          return {
+            status: 'failed',
+            message: 'The email request could not be sent.',
+          };
+        }
+      })();
+
+      const sheetsSubmission = (async () => {
+        if (!GOOGLE_SHEETS_URL) {
+          return {
+            status: 'failed',
+            message: 'Google Sheets URL is not configured.',
+          };
+        }
+
+        try {
           await fetch(GOOGLE_SHEETS_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: {
               'Content-Type': 'text/plain;charset=utf-8',
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(submissionData),
           });
+
+          return { status: 'dispatched' };
         } catch (sheetError) {
           console.error('Google Sheets submission error:', sheetError);
+          return {
+            status: 'failed',
+            message: 'The Google Sheets request could not be sent.',
+          };
+        }
+      })();
+
+      const [emailResult, sheetsResult] = await Promise.all([
+        emailSubmission,
+        sheetsSubmission,
+      ]);
+
+      if (emailResult.status === 'sent') {
+        if (sheetsResult.status === 'dispatched') {
+          setSuccessMessage(
+            'Your email was sent successfully. The Google Sheets request was dispatched, but this browser cannot confirm that the lead was stored. Our team will get back to you shortly.'
+          );
+        } else {
+          setSuccessMessage(
+            'Your email was sent successfully. Google Sheets could not be updated, but our team will get back to you shortly.'
+          );
           alert(
-            'Your email was sent, but the Google Sheets request could not be sent. Please check the integration.'
+            `Your email was sent, but ${sheetsResult.message} Please check the Sheets integration.`
           );
         }
 
@@ -69,17 +122,34 @@ function ContactForm() {
           products: '',
           message: ''
         });
+      } else if (sheetsResult.status === 'dispatched') {
+        alert(
+          'Email delivery failed. The Google Sheets request was dispatched, but this browser cannot confirm whether it was stored. Check the spreadsheet before retrying to avoid a duplicate lead. Your form data has been retained.'
+        );
       } else {
-        alert('Error: ' + result.message);
+        console.error('Contact form submission failed:', {
+          email: emailResult.message,
+          sheets: sheetsResult.message,
+        });
+
+        const sheetsError = sheetsResult.message;
+        if (window.location.hostname === 'localhost') {
+          alert(
+            `LOCAL TESTING ERROR:\nThe email could not be sent because you are running this on localhost via Vite, which does not support PHP.\n\n${sheetsError} Your form data has been retained.`
+          );
+        } else {
+          alert(
+            `The message could not be sent by email or Google Sheets. ${sheetsError} Please try again later. Your form data has been retained.`
+          );
+        }
       }
     } catch (error) {
-      console.error('Error sending form:', error);
-      if (window.location.hostname === 'localhost') {
-        alert('LOCAL TESTING ERROR:\nThe email could not be sent because you are running this on localhost via Vite, which does not support PHP.\n\nTo make the contact form work, please upload the "dist" folder to your live cPanel / web hosting server. The PHP code is correct and will work once deployed!');
-      } else {
-        alert('An error occurred while sending the message. Please try again later.');
-      }
+      console.error('Error submitting contact form:', error);
+      alert(
+        'An unexpected error occurred while sending the message. Your form data has been retained. Please try again later.'
+      );
     } finally {
+      submissionInProgress.current = false;
       setIsSubmitting(false);
     }
   };
@@ -170,7 +240,7 @@ function ContactForm() {
               </div>
               <h3 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '15px' }}>Thank you for filling the form</h3>
               <p style={{ fontSize: '16px', color: '#555', lineHeight: '1.6', maxWidth: '400px', margin: '0 auto 30px' }}>
-                We have received your request successfully. Our team will get back to you shortly.
+                {successMessage}
               </p>
               <button onClick={() => setIsSuccess(false)} style={{ backgroundColor: 'transparent', border: '2px solid #019267', color: '#019267', padding: '12px 30px', borderRadius: '30px', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px', transition: 'all 0.3s' }}>
                 Submit Another Request
