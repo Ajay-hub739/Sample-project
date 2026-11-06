@@ -275,7 +275,7 @@ function ContactForm() {
               <div style={{ marginBottom: '25px' }}>
                 <label style={labelStyle}>Direct Number <span style={asteriskStyle}>*</span></label>
                 <PhoneInput
-                  country={'in'}
+                  country={'gb'}
                   value={formData.phoneNumber}
                   onChange={(phone) => setFormData({ ...formData, phoneNumber: phone })}
                   inputStyle={{

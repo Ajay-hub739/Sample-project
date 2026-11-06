@@ -89,7 +89,7 @@ export default function App() {
 
       <Header />
       <main className="main-content">
-        <Suspense fallback={null}>
+        <Suspense fallback={<p role="status" style={{ padding: '100px 20px', textAlign: 'center' }}>Loading page...</p>}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/business-energy" element={<BusinessEnergy />} />
