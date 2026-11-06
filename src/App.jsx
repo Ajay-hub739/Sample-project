@@ -36,6 +36,9 @@ function useScrollAnimation() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const appRoot = document.querySelector('.app-wrapper');
+    if (!appRoot) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -46,34 +49,46 @@ function useScrollAnimation() {
       },
       { threshold: 0.1 }
     );
+    const observedElements = new WeakSet();
 
-    const timeoutId = setTimeout(() => {
+    const prepareAnimations = () => {
       // 1. Give h1s a slide-down animation by default (if no other animate class is set)
-      document.querySelectorAll('h1').forEach(el => {
+      appRoot.querySelectorAll('h1').forEach(el => {
         if (!el.className.includes('animate-fade-')) el.classList.add('animate-fade-down');
       });
 
       // 2. Give h2s and h3s a slide-right or slide-left animation alternately
-      document.querySelectorAll('h2, h3').forEach((el, index) => {
+      appRoot.querySelectorAll('h2, h3').forEach((el, index) => {
         if (!el.className.includes('animate-fade-') && !el.classList.contains('animate-stagger')) {
           el.classList.add(index % 2 === 0 ? 'animate-fade-right' : 'animate-fade-left');
         }
       });
 
       // 3. Give all cards a slide-up animation
-      document.querySelectorAll('[class*="card"]').forEach(el => {
+      appRoot.querySelectorAll('[class*="card"]').forEach(el => {
         if (!el.className.includes('animate-fade-') && !el.classList.contains('animate-stagger')) {
           el.classList.add('animate-fade-up');
         }
       });
 
-      // Observe ALL animated elements
-      const elements = document.querySelectorAll('.animate-fade-up, .animate-fade-down, .animate-fade-left, .animate-fade-right, .animate-stagger');
-      elements.forEach((el) => observer.observe(el));
-    }, 200);
+      const elements = appRoot.querySelectorAll(
+        '.animate-fade-up, .animate-fade-down, .animate-fade-left, .animate-fade-right, .animate-stagger'
+      );
+      elements.forEach((el) => {
+        if (!observedElements.has(el)) {
+          observer.observe(el);
+          observedElements.add(el);
+        }
+      });
+    };
+
+    prepareAnimations();
+
+    const mutationObserver = new MutationObserver(prepareAnimations);
+    mutationObserver.observe(appRoot, { childList: true, subtree: true });
 
     return () => {
-      clearTimeout(timeoutId);
+      mutationObserver.disconnect();
       observer.disconnect();
     };
   }, [pathname]);
