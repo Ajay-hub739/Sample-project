@@ -6,7 +6,7 @@ import PageBanner from '../components/PageBanner';
 
 const PhoneInput = PhoneInputModule.default ? PhoneInputModule.default : PhoneInputModule; 
 const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
-// ContactBoxes removed as it's now integrated into ContactForm
+// ContactBoxes updated and removed as it's now integrated into ContactForm
 
 function ContactForm() {
   const [formData, setFormData] = useState({
