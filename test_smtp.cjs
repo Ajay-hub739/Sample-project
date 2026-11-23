@@ -1,12 +1,17 @@
 const nodemailer = require('nodemailer');
 
+const { SMTP_USERNAME, SMTP_PASSWORD } = process.env;
+if (!SMTP_USERNAME || !SMTP_PASSWORD) {
+  throw new Error('Set SMTP_USERNAME and SMTP_PASSWORD before running this check.');
+}
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,
   auth: {
-    user: 'raiseupdigi@gmail.com',
-    pass: 'fbhf ryka hhmt rrsp'
+    user: SMTP_USERNAME,
+    pass: SMTP_PASSWORD
   }
 });
 

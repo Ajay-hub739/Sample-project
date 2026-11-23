@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+/ggs-private-config.php
 
 # Editor directories and files
 .vscode/*
