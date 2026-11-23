@@ -6,7 +6,7 @@ import PageBanner from '../components/PageBanner';
 
 const PhoneInput = PhoneInputModule.default ? PhoneInputModule.default : PhoneInputModule; 
 const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
-const RECAPTCHA_SITE_KEY = '6LcJUC4uAAAAANu5feyjA3HI25ggXCSVI1p5NhhN';
+const RECAPTCHA_SITE_KEY = '6LfqVi4uAAAAAA7HoRjiFyMcF8ESVJIG42hCXsHU';
 let recaptchaScriptPromise;
 
 function waitForRecaptchaReady() {
