@@ -6,24 +6,23 @@ The Contact Us form uses reCAPTCHA v2. The public site key is configured in
 `src/pages/Contact.jsx`; the matching secret key must stay on the PHP server.
 
 For Hostinger, create `ggs-private-config.php` one directory above `public_html`
-and have it return the following values:
+and have it return the following value:
 
 ```php
 <?php
 return [
     'RECAPTCHA_SECRET_KEY' => 'your-recaptcha-secret',
-    'SMTP_USERNAME' => 'your-gmail-address',
-    'SMTP_PASSWORD' => 'your-gmail-app-password',
 ];
 ```
 
-The PHP endpoint also reads these values from environment variables, if
-configured. Do not put this file in `public_html` or commit it to Git. PHP cURL
-must be enabled for server-side CAPTCHA verification.
+The form submits contact details to the configured Google Sheets script; it
+does not send email or require SMTP credentials. Do not put the private config
+file in `public_html` or commit it to Git. PHP cURL must be enabled for
+server-side CAPTCHA verification.
 
-For local Vite development, set `RECAPTCHA_SECRET_KEY`, `SMTP_USERNAME`, and
-`SMTP_PASSWORD` in the environment before running `npm run dev`. These are
-server-only values and must not use `VITE_` variable names.
+For local Vite development, set `RECAPTCHA_SECRET_KEY` in the environment
+before running `npm run dev`. It is server-only and must not use a `VITE_`
+variable name.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

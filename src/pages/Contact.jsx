@@ -149,123 +149,53 @@ function ContactForm() {
     submissionInProgress.current = true;
     setIsSubmitting(true);
 
-    const submissionData = { ...formData, captchaToken };
+    const captchaSubmission = { ...formData, captchaToken };
 
     try {
-      const emailSubmission = (async () => {
-        try {
-          const response = await fetch('/send_mail.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(submissionData),
-          });
-          const result = await response.json();
-
-          if (!response.ok || result.status !== 'success') {
-            return {
-              status: 'failed',
-              message: result.message || 'Email delivery failed.',
-            };
-          }
-
-          return { status: 'sent' };
-        } catch (error) {
-          console.error('Error sending contact email:', error);
-          return {
-            status: 'failed',
-            message: 'The email request could not be sent.',
-          };
-        }
-      })();
-
-      const sheetsSubmission = async () => {
-        if (!GOOGLE_SHEETS_URL) {
-          return {
-            status: 'failed',
-            message: 'Google Sheets URL is not configured.',
-          };
-        }
-
-        try {
-          await fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8',
-            },
-            body: JSON.stringify(formData),
-          });
-
-          return { status: 'dispatched' };
-        } catch (sheetError) {
-          console.error('Google Sheets submission error:', sheetError);
-          return {
-            status: 'failed',
-            message: 'The Google Sheets request could not be sent.',
-          };
-        }
-      };
-
-      const emailResult = await emailSubmission;
-      const sheetsResult = emailResult.status === 'sent'
-        ? await sheetsSubmission()
-        : { status: 'failed', message: 'Google Sheets was not updated because email verification failed.' };
-
-      if (emailResult.status === 'sent') {
+      const captchaResponse = await fetch('/send_mail.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(captchaSubmission),
+      });
+      const captchaResult = await captchaResponse.json();
+      if (!captchaResponse.ok || captchaResult.status !== 'success') {
         resetCaptcha();
-        if (sheetsResult.status === 'dispatched') {
-          setSuccessMessage(
-            'Your email was sent successfully. The Google Sheets request was dispatched, but this browser cannot confirm that the lead was stored. Our team will get back to you shortly.'
-          );
-        } else {
-          setSuccessMessage(
-            'Your email was sent successfully. Google Sheets could not be updated, but our team will get back to you shortly.'
-          );
-          alert(
-            `Your email was sent, but ${sheetsResult.message} Please check the Sheets integration.`
-          );
-        }
-
-        setIsSuccess(true);
-        setFormData({
-          businessName: '',
-          contactName: '',
-          phoneNumber: '',
-          emailAddress: '',
-          businessAddress: '',
-          products: '',
-          message: ''
-        });
-      } else if (sheetsResult.status === 'dispatched') {
-        resetCaptcha();
-        alert(
-          'Email delivery failed. The Google Sheets request was dispatched, but this browser cannot confirm whether it was stored. Check the spreadsheet before retrying to avoid a duplicate lead. Your form data has been retained.'
-        );
-      } else {
-        resetCaptcha();
-        console.error('Contact form submission failed:', {
-          email: emailResult.message,
-          sheets: sheetsResult.message,
-        });
-
-        const submissionError = emailResult.message || sheetsResult.message;
-        if (window.location.hostname === 'localhost') {
-          alert(
-            `LOCAL TESTING ERROR:\nThe email could not be sent because you are running this on localhost via Vite, which requires server-side configuration.\n\n${submissionError} Your form data has been retained.`
-          );
-        } else {
-          alert(
-            `The message could not be sent. ${submissionError} Please try again later. Your form data has been retained.`
-          );
-        }
+        alert(captchaResult.message || 'CAPTCHA verification failed. Please try again.');
+        return;
       }
+
+      if (!GOOGLE_SHEETS_URL) {
+        throw new Error('Google Sheets URL is not configured.');
+      }
+
+      await fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      resetCaptcha();
+      setSuccessMessage('Thank you for contacting us. Your request has been submitted successfully. Our team will get back to you shortly.');
+      setIsSuccess(true);
+      setFormData({
+        businessName: '',
+        contactName: '',
+        phoneNumber: '',
+        emailAddress: '',
+        businessAddress: '',
+        products: '',
+        message: ''
+      });
     } catch (error) {
       console.error('Error submitting contact form:', error);
       resetCaptcha();
       alert(
-        'An unexpected error occurred while sending the message. Your form data has been retained. Please try again later.'
+        `${error.message || 'An unexpected error occurred while submitting your request.'} Your form data has been retained. Please try again later.`
       );
     } finally {
       submissionInProgress.current = false;

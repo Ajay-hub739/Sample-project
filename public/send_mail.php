@@ -1,6 +1,4 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 // Add CORS headers to allow requests from the React app (dev or production)
 header("Access-Control-Allow-Origin: *");
@@ -70,10 +68,8 @@ if ($captchaToken === '' || strlen($captchaToken) > 4096) {
 }
 
 $captchaSecret = $getConfigValue('RECAPTCHA_SECRET_KEY');
-$smtpUsername = $getConfigValue('SMTP_USERNAME');
-$smtpPassword = $getConfigValue('SMTP_PASSWORD');
-if ($captchaSecret === '' || $smtpUsername === '' || $smtpPassword === '') {
-    error_log('GGS contact form requires RECAPTCHA_SECRET_KEY, SMTP_USERNAME, and SMTP_PASSWORD.');
+if ($captchaSecret === '') {
+    error_log('GGS contact form requires RECAPTCHA_SECRET_KEY.');
     respond(503, ["status" => "error", "message" => "The contact form is temporarily unavailable."]);
 }
 
@@ -113,83 +109,4 @@ if (!is_array($verification) || empty($verification['success'])) {
     ]);
 }
 
-require __DIR__ . '/PHPMailer/src/Exception.php';
-require __DIR__ . '/PHPMailer/src/PHPMailer.php';
-require __DIR__ . '/PHPMailer/src/SMTP.php';
-
-$escapeHtml = function ($value) {
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-};
-$businessName = $escapeHtml(trim($data['businessName']));
-$contactName = $escapeHtml(trim($data['contactName']));
-$phoneNumber = $escapeHtml(trim($data['phoneNumber']));
-$emailAddress = $escapeHtml(trim($data['emailAddress']));
-$businessAddress = $escapeHtml(trim($data['businessAddress']));
-$products = $escapeHtml(trim($data['products']));
-$messageBody = $escapeHtml(isset($data['message']) && is_string($data['message']) ? trim($data['message']) : '');
-
-$mail = new PHPMailer(true);
-
-try {
-    // Server settings
-    $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = $smtpUsername;
-    $mail->Password   = $smtpPassword;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // or ENCRYPTION_STARTTLS with port 587
-    $mail->Port       = 465;
-
-    // Recipients
-    $mail->setFrom($smtpUsername, 'GGS Utilities Website');
-    $mail->addAddress('chandubilla050@gmail.com');
-    $mail->addAddress('info@ggsutilities.com');
-    $mail->addReplyTo($emailAddress, $contactName);
-
-    // Content
-    $mail->isHTML(true);
-    $mail->Subject = 'New Contact Form Submission from ' . $contactName;
-    
-    $body = "
-    <h2>New Contact Form Submission</h2>
-    <table border='1' cellpadding='10' cellspacing='0'>
-        <tr>
-            <th>Business Name</th>
-            <td>{$businessName}</td>
-        </tr>
-        <tr>
-            <th>Contact Name</th>
-            <td>{$contactName}</td>
-        </tr>
-        <tr>
-            <th>Phone Number</th>
-            <td>{$phoneNumber}</td>
-        </tr>
-        <tr>
-            <th>Email Address</th>
-            <td>{$emailAddress}</td>
-        </tr>
-        <tr>
-            <th>Business Address</th>
-            <td>{$businessAddress}</td>
-        </tr>
-        <tr>
-            <th>Products of Interest</th>
-            <td>{$products}</td>
-        </tr>
-        <tr>
-            <th>Message</th>
-            <td>" . nl2br($messageBody) . "</td>
-        </tr>
-    </table>
-    ";
-
-    $mail->Body    = $body;
-    $mail->AltBody = strip_tags(str_replace(['<br>', '</tr>', '</td>'], ["\n", "\n", "\t"], $body));
-
-    $mail->send();
-    respond(200, ["status" => "success", "message" => "Thank you for sending the mail"]);
-} catch (Exception $e) {
-    error_log('Contact form email delivery failed: ' . $mail->ErrorInfo);
-    respond(500, ["status" => "error", "message" => "Message could not be sent. Please try again later."]);
-}
+respond(200, ["status" => "success", "message" => "CAPTCHA verified."]);
