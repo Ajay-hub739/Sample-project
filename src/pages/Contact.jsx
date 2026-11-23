@@ -6,6 +6,37 @@ import PageBanner from '../components/PageBanner';
 
 const PhoneInput = PhoneInputModule.default ? PhoneInputModule.default : PhoneInputModule; 
 const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
+const RECAPTCHA_SITE_KEY = '6LdpCS4uAAAAAEbbyn60R0if9XHrLLphe0RfsrLo';
+let recaptchaScriptPromise;
+
+function loadRecaptchaScript() {
+  if (window.grecaptcha?.render) {
+    return Promise.resolve(window.grecaptcha);
+  }
+
+  if (!recaptchaScriptPromise) {
+    recaptchaScriptPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        if (window.grecaptcha?.render) {
+          resolve(window.grecaptcha);
+        } else {
+          reject(new Error('Google reCAPTCHA did not initialize.'));
+        }
+      };
+      script.onerror = () => reject(new Error('Google reCAPTCHA could not be loaded.'));
+      document.head.appendChild(script);
+    }).catch((error) => {
+      recaptchaScriptPromise = undefined;
+      throw error;
+    });
+  }
+
+  return recaptchaScriptPromise;
+}
 // ContactBoxes removed as it's now integrated into ContactForm
 
 function ContactForm() {
@@ -21,7 +52,58 @@ function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
+  const captchaContainerRef = useRef(null);
+  const captchaWidgetId = useRef(null);
   const submissionInProgress = useRef(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    loadRecaptchaScript()
+      .then((grecaptcha) => {
+        grecaptcha.ready(() => {
+          if (!isMounted || !captchaContainerRef.current || captchaWidgetId.current !== null) return;
+
+          captchaWidgetId.current = grecaptcha.render(captchaContainerRef.current, {
+            sitekey: RECAPTCHA_SITE_KEY,
+            callback: (token) => {
+              setCaptchaToken(token);
+              setCaptchaError('');
+            },
+            'expired-callback': () => {
+              setCaptchaToken('');
+              setCaptchaError('Your CAPTCHA verification expired. Please verify again.');
+            },
+            'error-callback': () => {
+              setCaptchaToken('');
+              setCaptchaError('The CAPTCHA could not be verified. Please try again.');
+            },
+          });
+        });
+      })
+      .catch(() => {
+        if (isMounted) {
+          setCaptchaError('The CAPTCHA could not be loaded. Please refresh the page and try again.');
+        }
+      });
+
+    return () => {
+      isMounted = false;
+      if (captchaWidgetId.current !== null && window.grecaptcha) {
+        window.grecaptcha.reset(captchaWidgetId.current);
+        captchaWidgetId.current = null;
+      }
+    };
+  }, []);
+
+  const resetCaptcha = () => {
+    setCaptchaToken('');
+    if (captchaWidgetId.current !== null && window.grecaptcha) {
+      window.grecaptcha.reset(captchaWidgetId.current);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,49 +112,34 @@ function ContactForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (submissionInProgress.current) return;
+    if (!captchaToken) {
+      setCaptchaError('Please complete the CAPTCHA before submitting your request.');
+      return;
+    }
 
     submissionInProgress.current = true;
     setIsSubmitting(true);
 
-    const submissionData = { ...formData };
+    const submissionData = { ...formData, captchaToken };
 
     try {
-      const emailSubmission = (async () => {
-        try {
-          const response = await fetch('/send_mail.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(submissionData),
-          });
-          const result = await response.json();
+      const response = await fetch('/send_mail.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+      const result = await response.json();
 
-          if (!response.ok || result.status !== 'success') {
-            return {
-              status: 'failed',
-              message: result.message || 'Email delivery failed.',
-            };
-          }
+      if (!response.ok || result.status !== 'success') {
+        resetCaptcha();
+        alert(result.message || 'Email delivery failed. Please try again.');
+        return;
+      }
 
-          return { status: 'sent' };
-        } catch (error) {
-          console.error('Error sending contact email:', error);
-          return {
-            status: 'failed',
-            message: 'The email request could not be sent.',
-          };
-        }
-      })();
-
-      const sheetsSubmission = (async () => {
-        if (!GOOGLE_SHEETS_URL) {
-          return {
-            status: 'failed',
-            message: 'Google Sheets URL is not configured.',
-          };
-        }
-
+      let sheetsMessage = '';
+      if (GOOGLE_SHEETS_URL) {
         try {
           await fetch(GOOGLE_SHEETS_URL, {
             method: 'POST',
@@ -80,73 +147,38 @@ function ContactForm() {
             headers: {
               'Content-Type': 'text/plain;charset=utf-8',
             },
-            body: JSON.stringify(submissionData),
+            body: JSON.stringify(formData),
           });
-
-          return { status: 'dispatched' };
         } catch (sheetError) {
           console.error('Google Sheets submission error:', sheetError);
-          return {
-            status: 'failed',
-            message: 'The Google Sheets request could not be sent.',
-          };
+          sheetsMessage = ' Google Sheets could not be updated, but our team will get back to you shortly.';
         }
-      })();
-
-      const [emailResult, sheetsResult] = await Promise.all([
-        emailSubmission,
-        sheetsSubmission,
-      ]);
-
-      if (emailResult.status === 'sent') {
-        if (sheetsResult.status === 'dispatched') {
-          setSuccessMessage(
-            'Your email was sent successfully. The Google Sheets request was dispatched, but this browser cannot confirm that the lead was stored. Our team will get back to you shortly.'
-          );
-        } else {
-          setSuccessMessage(
-            'Your email was sent successfully. Google Sheets could not be updated, but our team will get back to you shortly.'
-          );
-          alert(
-            `Your email was sent, but ${sheetsResult.message} Please check the Sheets integration.`
-          );
-        }
-
-        setIsSuccess(true);
-        setFormData({
-          businessName: '',
-          contactName: '',
-          phoneNumber: '',
-          emailAddress: '',
-          businessAddress: '',
-          products: '',
-          message: ''
-        });
-      } else if (sheetsResult.status === 'dispatched') {
-        alert(
-          'Email delivery failed. The Google Sheets request was dispatched, but this browser cannot confirm whether it was stored. Check the spreadsheet before retrying to avoid a duplicate lead. Your form data has been retained.'
-        );
       } else {
-        console.error('Contact form submission failed:', {
-          email: emailResult.message,
-          sheets: sheetsResult.message,
-        });
-
-        const sheetsError = sheetsResult.message;
-        if (window.location.hostname === 'localhost') {
-          alert(
-            `LOCAL TESTING ERROR:\nThe email could not be sent because you are running this on localhost via Vite, which does not support PHP.\n\n${sheetsError} Your form data has been retained.`
-          );
-        } else {
-          alert(
-            `The message could not be sent by email or Google Sheets. ${sheetsError} Please try again later. Your form data has been retained.`
-          );
-        }
+        sheetsMessage = ' Google Sheets URL is not configured, but our team will get back to you shortly.';
       }
+
+      resetCaptcha();
+      setSuccessMessage(
+        `Your email was sent successfully.${sheetsMessage || ' The Google Sheets request was dispatched, but this browser cannot confirm that the lead was stored. Our team will get back to you shortly.'}`
+      );
+      if (sheetsMessage) {
+        alert(sheetsMessage.trim());
+      }
+      setIsSuccess(true);
+      setFormData({
+        businessName: '',
+        contactName: '',
+        phoneNumber: '',
+        emailAddress: '',
+        businessAddress: '',
+        products: '',
+        message: ''
+      });
     } catch (error) {
       console.error('Error submitting contact form:', error);
+      resetCaptcha();
       alert(
-        'An unexpected error occurred while sending the message. Your form data has been retained. Please try again later.'
+        'The message could not be sent. Your form data has been retained. Please try again later.'
       );
     } finally {
       submissionInProgress.current = false;
@@ -350,7 +382,7 @@ function ContactForm() {
                 </select>
               </div>
 
-              <div style={{ marginBottom: '40px' }}>
+              <div style={{ marginBottom: '24px' }}>
                 <label style={labelStyle}>Message</label>
                 <textarea
                   name="message"
@@ -362,11 +394,20 @@ function ContactForm() {
                 ></textarea>
               </div>
 
+              <div style={{ marginBottom: '24px' }}>
+                <div ref={captchaContainerRef} />
+                {captchaError && (
+                  <p role="alert" style={{ color: '#b42318', fontSize: '14px', margin: '10px 0 0' }}>
+                    {captchaError}
+                  </p>
+                )}
+              </div>
+
               <button
                 type="submit"
                 className="ggs-btn"
-                disabled={isSubmitting}
-                style={{ width: '100%', padding: '16px', fontSize: '16px', display: 'flex', justifyContent: 'center', backgroundColor: isSubmitting ? '#016b4a' : '#019267', border: 'none', color: '#fff', borderRadius: '4px', cursor: isSubmitting ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
+                disabled={isSubmitting || !captchaToken}
+                style={{ width: '100%', padding: '16px', fontSize: '16px', display: 'flex', justifyContent: 'center', backgroundColor: isSubmitting ? '#016b4a' : '#019267', border: 'none', color: '#fff', borderRadius: '4px', cursor: isSubmitting || !captchaToken ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
               >
                 {isSubmitting ? 'Sending...' : 'Submit Request'}
               </button>
