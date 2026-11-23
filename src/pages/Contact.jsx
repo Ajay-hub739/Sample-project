@@ -250,14 +250,14 @@ function ContactForm() {
           sheets: sheetsResult.message,
         });
 
-        const sheetsError = sheetsResult.message;
+        const submissionError = emailResult.message || sheetsResult.message;
         if (window.location.hostname === 'localhost') {
           alert(
-            `LOCAL TESTING ERROR:\nThe email could not be sent because you are running this on localhost via Vite, which does not support PHP.\n\n${sheetsError} Your form data has been retained.`
+            `LOCAL TESTING ERROR:\nThe email could not be sent because you are running this on localhost via Vite, which requires server-side configuration.\n\n${submissionError} Your form data has been retained.`
           );
         } else {
           alert(
-            `The message could not be sent by email or Google Sheets. ${sheetsError} Please try again later. Your form data has been retained.`
+            `The message could not be sent. ${submissionError} Please try again later. Your form data has been retained.`
           );
         }
       }
