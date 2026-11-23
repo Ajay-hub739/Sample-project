@@ -9,41 +9,9 @@ const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 const RECAPTCHA_SITE_KEY = '6LdpCS4uAAAAAEbbyn60R0if9XHrLLphe0RfsrLo';
 let recaptchaScriptPromise;
 
-function waitForRecaptchaReady() {
-  return new Promise((resolve, reject) => {
-    let settled = false;
-    const timeout = window.setTimeout(() => {
-      settled = true;
-      reject(new Error('Google reCAPTCHA initialization timed out.'));
-    }, 10000);
-
-    const checkReady = () => {
-      if (settled) return;
-      const grecaptcha = window.grecaptcha;
-      if (typeof grecaptcha?.ready !== 'function') {
-        window.setTimeout(checkReady, 50);
-        return;
-      }
-
-      grecaptcha.ready(() => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeout);
-        if (typeof grecaptcha.render === 'function') {
-          resolve(grecaptcha);
-        } else {
-          reject(new Error('Google reCAPTCHA did not initialize.'));
-        }
-      });
-    };
-
-    checkReady();
-  });
-}
-
 function loadRecaptchaScript() {
-  if (typeof window.grecaptcha?.render === 'function') {
-    return waitForRecaptchaReady();
+  if (window.grecaptcha?.render) {
+    return Promise.resolve(window.grecaptcha);
   }
 
   if (!recaptchaScriptPromise) {
@@ -53,7 +21,11 @@ function loadRecaptchaScript() {
       script.async = true;
       script.defer = true;
       script.onload = () => {
-        waitForRecaptchaReady().then(resolve, reject);
+        if (window.grecaptcha?.render) {
+          resolve(window.grecaptcha);
+        } else {
+          reject(new Error('Google reCAPTCHA did not initialize.'));
+        }
       };
       script.onerror = () => reject(new Error('Google reCAPTCHA could not be loaded.'));
       document.head.appendChild(script);
@@ -91,8 +63,9 @@ function ContactForm() {
 
     loadRecaptchaScript()
       .then((grecaptcha) => {
-        if (!isMounted || !captchaContainerRef.current || captchaWidgetId.current !== null) return;
-        try {
+        grecaptcha.ready(() => {
+          if (!isMounted || !captchaContainerRef.current || captchaWidgetId.current !== null) return;
+
           captchaWidgetId.current = grecaptcha.render(captchaContainerRef.current, {
             sitekey: RECAPTCHA_SITE_KEY,
             callback: (token) => {
@@ -108,15 +81,11 @@ function ContactForm() {
               setCaptchaError('The CAPTCHA could not be verified. Please try again.');
             },
           });
-        } catch (error) {
-          console.error('Google reCAPTCHA widget could not be rendered:', error);
-          setCaptchaError('The CAPTCHA could not be displayed. Check the site key and allowed domains in Google reCAPTCHA settings.');
-        }
+        });
       })
-      .catch((error) => {
-        console.error('Google reCAPTCHA could not be initialized:', error);
+      .catch(() => {
         if (isMounted) {
-          setCaptchaError('The CAPTCHA could not be loaded. Check your connection and reCAPTCHA settings, then refresh the page.');
+          setCaptchaError('The CAPTCHA could not be loaded. Please refresh the page and try again.');
         }
       });
 
