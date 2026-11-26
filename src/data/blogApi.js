@@ -26,14 +26,19 @@ function mapPost(post) {
     ?? media?.media_details?.sizes?.medium_large?.source_url
     ?? media?.source_url
     ?? '/blog_hero.png';
+  const title = getTextFromHtml(post.title?.rendered) || 'Untitled article';
+  const excerpt = getTextFromHtml(post.excerpt?.rendered);
+  const seo = post.yoast_head_json;
 
   return {
     slug: post.slug,
-    title: getTextFromHtml(post.title?.rendered) || 'Untitled article',
+    title,
     image,
     date: formatPostDate(post.date),
-    excerpt: getTextFromHtml(post.excerpt?.rendered),
+    excerpt,
     content: post.content?.rendered ?? '',
+    seoTitle: getTextFromHtml(seo?.title) || `${title} | GGS Utilities`,
+    seoDescription: getTextFromHtml(seo?.description) || excerpt,
   };
 }
 

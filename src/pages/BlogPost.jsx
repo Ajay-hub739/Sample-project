@@ -5,7 +5,6 @@ import PageBanner from '../components/PageBanner';
 import { fetchBlogPosts } from '../data/blogApi';
 
 export default function BlogPost() {
-  useSEO("Blog Article | GGS Utilities", "Read our latest insights and expert articles on business energy, water solutions, and utility management from GGS Utilities.");
   const { slug } = useParams();
   const [result, setResult] = useState(null);
 
@@ -44,6 +43,12 @@ export default function BlogPost() {
   const loading = result?.slug !== slug;
   const error = !loading && result.error;
   const post = !loading && !error ? result.post : null;
+
+  useSEO(
+    post?.seoTitle || (post ? `${post.title} | GGS Utilities` : 'Blog Article | GGS Utilities'),
+    post?.seoDescription || post?.excerpt
+      || 'Read our latest insights and expert articles on business energy, water solutions, and utility management from GGS Utilities.'
+  );
 
   if (loading) {
     return <p role="status" style={{ padding: '150px 20px', textAlign: 'center' }}>Loading article...</p>;
