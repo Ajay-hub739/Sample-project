@@ -74,6 +74,7 @@ function useSEO(title, description, keywords) {
 
     updateMetaTag('description', description);
     updateMetaTag('keywords', keywords);
+    updateMetaTag('robots', 'index, follow');
 
     const normalizedPath = pathname === '/' ? '/' : `/${pathname.replace(/^\/+|\/+$/g, '')}`;
     const canonicalUrl = CANONICAL_URLS[normalizedPath]
